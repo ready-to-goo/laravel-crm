@@ -1,10 +1,9 @@
 services:
   app:
-    image: composer:2.7
+    image: richarvey/nginx-php-fpm:php8.1
     working_dir: /var/www
     volumes:
       - ./:/var/www
-    command: php-fpm
     expose:
       - "9000"
     depends_on:
