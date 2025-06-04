@@ -24,8 +24,7 @@
         "mpdf/mpdf": "^8.2",
         "prettus/l5-repository": "^2.7.9",
         "smalot/pdfparser": "^2.11",
-        "webklex/laravel-imap": "^5.3",
-        "bagisto/laravel-api": "dev-master"
+        "webklex/laravel-imap": "^5.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
