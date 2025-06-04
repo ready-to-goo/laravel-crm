@@ -14,7 +14,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "8080:80"  # Porta alterada para evitar conflito com a 80
+      - "8081:80"  # Alterado para evitar conflitos
     volumes:
       - ./:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
