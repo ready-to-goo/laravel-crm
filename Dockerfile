@@ -1,24 +1,20 @@
 FROM php:8.1-apache
 
-# Instala extensões PHP necessárias para o Laravel e o Krayin
+# Instala extensões PHP necessárias para o Laravel e Krayin, incluindo GD
 RUN apt-get update && apt-get install -y \
-    zip unzip git curl libzip-dev libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    zip unzip git curl libzip-dev libpng-dev libonig-dev libxml2-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql zip gd
 
-# Habilita o mod_rewrite do Apache
+# Habilita mod_rewrite
 RUN a2enmod rewrite
 
-# Define diretório de trabalho
 WORKDIR /var/www/html
 
-# Copia todos os arquivos para dentro do container
 COPY . /var/www/html
 
-# Permissões de arquivos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Configura o DocumentRoot e permissões da pasta public
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf && \
     echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
@@ -26,16 +22,14 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
-# Instala o Composer e adiciona ao PATH
+# Instala o Composer
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     chmod +x /usr/local/bin/composer
 
-# Instala dependências do Laravel
+# Instala dependências do Laravel/Krayin
 RUN composer install --no-dev --optimize-autoloader
 
-# Expõe a porta padrão
 EXPOSE 80
 
-# Comando de inicialização do Apache
 CMD ["apache2-foreground"]
